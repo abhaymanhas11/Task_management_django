@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css">
+    <link rel="stylesheet" href="{% static 'todo/styles/custom.css' %}">
+
+
+<nav class="navbar navbar-light bg-primary">
+    <a class="navbar-brand fw-bold text-white mx-3" href="{% url 'dashboard' %}">TODO List App</a>
+     <form class="form-inline">
+       <i class='fas fa-user-alt' style='font-size:15px; color:white'></i>
+       <a href="#">{{request.user}}</a>
+       <button type="button" class="btn btn-danger mx-3"> <a href="{% url 'logout' %}">Logout</a></button> 
+     </form>
+   </nav>
+</head>
+<body>
+
+  <div class="row">
+    <h4 class="text-center alert alert-info"> Task Management </h4>
+
+    <div class="col-sm-3 bg-primary p-3 rounded-3 shadow p-3 mb-5">
+  <div class="card p-2" style="width: 20rem;">
+    <div class="card-header">
+    <h3>Task details</h3>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><u>Task ID</u>       :{{i.id}}</li>
+      <li class="list-group-item"><u>Title</u>       :{{i.title}}</li>
+      <li class="list-group-item"><u>Created by</u>  :{{i.created_by}}</li>
+      <li class="list-group-item"><u>Assigned to </u>:{{i.assigned_to}}</li>
+      <li class="list-group-item"><u>Status </u>  :{{i.status}}</li>
+      <li class="list-group-item"><u>Created at</u>  :{{i.created_at}}</li>
+    </ul>
+    </div> 
+    {% if user %}
+      <div class="card mt-1" style="width: 20rem;">
+      <h2 class="card-header"> Rating</h2>
+     
+      <div class="card-body">
+        {% if rating %}
+        {% for i in rating %}
+        <i class="rating__star fas fa-star" style="color:rgb(58, 11, 189);"></i>
+        {% endfor %}
+      {% else %}
+      <form action="{% url 'rate' i.id %}" method="post">
+        {% csrf_token %}
+        <div class="rating">
+          <i class="rating__star far fa-star"  style="margin-left: 2px;" aria-required="true"></i>
+          <i class="rating__star far fa-star"></i>
+          <i class="rating__star far fa-star"></i>
+          <i class="rating__star far fa-star"></i>
+          <i class="rating__star far fa-star"></i>
+      
+          <input type="hidden" name="r" id="rate" required>
+          <input type="submit" value="Rate" class="btn btn-success m-3">
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+ 
+  
+<div class="col-sm-9">
+
+  {% if not user %}
+
+    <a href="{% url 'addcontent' i.id %}"> <button type="button" class="btn btn-success mb-1 text-left">Add Content</button></a>
+
+    {% if drafts %}
+
+   <a href="{% url 'editcontent' drafts.id %}">{{ drafts.content|safe }}</a><br>
+ {% else %}
+
+    No drafts found.
+ {% endif %}
+         
+    {% else%}
+    <a href="#"> <button type="button" onclick="alert('under process')" class="btn btn-info mb-1 text-left">View Content</button></a>
+  {% endif %}
+
+
+      <h4 class="text-center alert alert-info">Comments</h4>
+        <div class="row d-flex justify-content-center">
+              {% for i in comment %}
+              <div class="card-body p-1 mx-2">
+                <div class="card px-2">
+                    <p class="p-1 bg-light">{{i.body|safe}}</p>
+                    <div class="d-flex justify-content-between">
+                        <p class="fas fa-user-alt text-muted"><small>{{i.created_by}} ,{{i.created_at}}</small></p>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+             </div>
+             </div>
+<a href="{% url 'comments' i.id %}"> <button type="button" style="float: right;
+  margin-right:0px;" class="btn btn-warning  mt-1">Write Comment</button></a> 
+
+<script>
+const ratingStars = [...document.getElementsByClassName("rating__star")];
+
+function executeRating(stars) {
+  const starClassActive = "rating__star fas fa-star";
+  const starClassInactive = "rating__star far fa-star";
+  const starsLength = stars.length;
+  let i;
+  stars.map((star) => {
+    star.onclick = () => {
+      i = stars.indexOf(star);
+    
+      document.getElementById("rate").value=parseInt(i)	
+      if (star.className===starClassInactive) {
+        for (i; i >= 0; --i) stars[i].className = starClassActive;
+      } else {
+        for (i; i < starsLength; ++i) stars[i].className = starClassInactive;
+      }
+      
+      
+    };
+  });
+}
+executeRating(ratingStars);
+
+</script>
+
+
+</div>
+</body>
+</html>

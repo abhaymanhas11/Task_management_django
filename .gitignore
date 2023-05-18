@@ -1,0 +1,11 @@
+env/
+.vscode
+__pycache__/
+*.py[cod]
+.env
+.venv
+.env
+*env
+*.sqlite3
+media/
+Task_manager_app/Task_manager_app/media

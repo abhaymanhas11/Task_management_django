@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+    <head>
+        <title>Demo: TODO</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css">
+        <link rel="stylesheet" href="{% static 'todo/styles/custom.css' %}">
+        
+  <nav class="navbar navbar-light bg-primary">
+        <a class="navbar-brand fw-bold text-white mx-3" href="dashboard">TODO List App</a>
+         <form class="form-inline">
+           <i class='fas fa-user' style='font-size:15px; color:white'></i>
+           <a href="#">{{request.user}}</a>
+           <button type="button" class="btn btn-danger mx-3"> <a href="{% url 'logout' %}">Logout</a></button> 
+         </form>
+       </nav>
+
+    </head>
+    <body>
+      <h4 class="text-center alert alert-info"> Task Management </h4>
+      {% if type %}
+      <button type="button" class="btn btn-outline-primary"><a href="{% url 'addtask' %}" >Add task</a></button>
+     {% endif %}
+  
+       
+   <div class="row mt-1">
+
+    
+      {% if tasks%}
+      <table class="table table-hover table-primary">
+        <thead>
+          <tr>
+              <th scope="col">#</th>
+              <th scope="col">Task Name</th>
+              <th scope="col">Status</th>
+              <th scope="col">Details </th>
+              {% if type %}
+              <th scope="col">Delete</th>
+              {% endif %}
+          </tr>
+          </thead>
+        
+          <tbody>
+          
+            {% for task in tasks %}
+            <tr>
+              <td> {{task.id}}</td>
+              <td>{{task.title}}</td>
+
+             {% if task.status == "Assigned" %}
+              <td><button type="button" class="btn btn-primary ">{{task.status}}</button></td>
+            {% endif %}
+            {% if task.status == "Submitted" %}
+            <td><button type="button" class="btn btn-dark">{{task.status}}</button></td>
+          {% endif %}
+          {% if task.status == "Revision_Required" %}
+          <td><button type="button" class="btn btn-info">{{task.status}}</button></td>
+        {% endif %}
+        {% if task.status == "Approved" %}
+        <td><button type="button" class="btn btn-success">{{task.status}}</button></td>
+      {% endif %}
+              
+              <td><a href="{% url 'viewdetails' task.id %}" class="btn btn-primary">View</a></button></td>
+              {% if type %}
+              <td>
+                <a href="{% url 'deletetask' task.id %}" class="btn btn-danger">Delete</a>
+              </td>
+              {% endif %}
+            </tr>
+            
+            {% endfor %}
+            </tbody>
+      </table>
+      {% else %}
+      <h3 class="shadow p-1 my-1 text-black bg-muted rounded">No records </h3>
+      {% endif %}
+      </div>
+      </div>
+           
+        
+           
+          
+         
+    
+   
+
+   
+    
+    
+    
+    </body>
+
+
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="{% static 'todo/script/modal.js'%}"></script>
+
+</html>

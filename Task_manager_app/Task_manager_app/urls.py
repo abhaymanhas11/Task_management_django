@@ -22,6 +22,8 @@ from django.urls import re_path
 from django.views.decorators.cache import never_cache
 from ckeditor_uploader import views as ck_views
 
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("apps.user.urls")),
@@ -39,3 +41,6 @@ ckEditor_urls = [
 ]
 
 urlpatterns += ckEditor_urls
+
+
+urlpatterns +=  staticfiles_urlpatterns()
